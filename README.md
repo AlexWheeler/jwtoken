@@ -1,5 +1,7 @@
 # Jwtoken
 
+Rack middleware that reads a JWT from the request body and attaches it to the `Authorization` header.  Useful for when your Single Page Application (SPA) needs to authentiate with a Ruby backend, but you're not able to send the token in the `Authorization` header. E.g. HTML forms, `navigator.sendBeacon`, etc.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -18,6 +20,25 @@ Or install it yourself as:
 
 ## Usage
 
+### Rails
+
+Add `Jwtoken::Middleware` to beginning of middleware stack:
+
+*environment.rb*
+`config.middleware.insert_before 1, Jwtoken::Middleware`
+
+### Requests
+
+Jwtoken currently supports two Content-Types, where the request body includes the jwt_token:
+
+1. 'Content-Type': 'application/json'
+    * { jwt_token: "Bearer efgxyz"}
+
+2. 'Content-Type': 'application/x-www-form-urlencoded'
+
+    * 'jwt_token=Bearer+efgxyz'
+
+Given your request Content-Type header is one of the above and the body includes jwt_token as seen above your Rack Api will see the JWT correctly included in the Authorization header: *Authorization: 'Bearer efgxyz'*
 
 ## Development
 
